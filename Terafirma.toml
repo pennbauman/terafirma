@@ -1,0 +1,24 @@
+[settings]
+output_dir = "output"
+template_dir = "templates"
+static_dir = "static"
+page_dir = "pages"
+
+[context]
+sitename = "Terafirma"
+
+
+[[page]]
+path = "/index.html"
+title = "Home Page"
+
+[[page]]
+path = "/error/teapot.html"
+context = { code = 414, message = "I’m a teapot" }
+body = """
+{{ code }} : {{ message }}
+"""
+
+[[redirect]]
+path = "/github"
+url = "https://github.com/pennbauman/terafirma"

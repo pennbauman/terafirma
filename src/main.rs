@@ -2,15 +2,13 @@
 //   Penn Bauman <me@pennbauman.com>
 use std::env;
 use anyhow::Result;
-
-mod builder;
-use builder::SiteBuilder;
+use terafirma::SiteBuilder;
 
 
 fn main() -> Result<()> {
     let args: Vec<String> = env::args().collect();
 
-    let mut file_path = "terafirma.toml";
+    let mut file_path = "Terafirma.toml";
     if args.len() > 1 {
         println!("{}", &args[1]);
         file_path = &args[1];

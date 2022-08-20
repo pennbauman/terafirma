@@ -70,7 +70,12 @@ impl PageBuilder {
     pub fn build(&self, tera: &mut Tera, global: &Context, output: &Path, pages: &Path) -> Result<()> {
         let text = self.render(tera, global, pages)?;
         //println!("Page: {}", text);
-        let mut file = fs::File::create(output.join(self.path())).unwrap();
+        let full_path = output.join(self.path());
+        match full_path.parent() {
+            Some(p) => fs::create_dir_all(p)?,
+            None => (),
+        };
+        let mut file = fs::File::create(full_path).unwrap();
         file.write(text.as_bytes())?;
         Ok(())
     }

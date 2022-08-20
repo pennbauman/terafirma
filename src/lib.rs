@@ -112,15 +112,16 @@ impl SiteBuilder {
     pub fn build(&mut self) -> Result<()> {
         let mut tera = Tera::new(&self.template_dir)?;
 
+        //println!("build start ...");
         match fs::remove_dir_all(&self.output_dir) {
             Ok(_) => (),
             Err(e) => if e.raw_os_error() != Some(2) {
                 return Err(e.into());
             },
-            //println!("rm {:?}", e),
         };
-        fs::create_dir(&self.output_dir)?;
+        fs::create_dir_all(&self.output_dir)?;
         for f in recursive_ls(&self.static_dir)? {
+            //println!("static: {}", f);
             match Path::new(&f).parent() {
                 Some(p) => fs::create_dir_all(&self.output_dir.join(p))?,
                 None => (),
@@ -133,9 +134,11 @@ impl SiteBuilder {
         for f in recursive_ls(&self.page_dir)? {
             let mut dup = false;
             for p in &mut self.pages {
+                //println!("page: {}", f);
                 if p.path() == f {
                     dup = true;
                     p.add_file_body(&f)?;
+                    break;
                 }
             }
             if !dup {
@@ -188,6 +191,12 @@ fn create_path(root: &Path, val: Option<&toml::Value>, default: &str) -> PathBuf
 
 fn recursive_ls(dir: &Path) -> Result<Vec<String>> {
     let mut ret = vec![];
+    if !dir.is_dir() {
+        if dir.is_file() {
+            panic!("recursive_ls() requires a directory");
+        }
+        return Ok(ret);
+    }
     let mut subdirs = vec![PathBuf::from("")];
     while subdirs.len() > 0 {
         let prefix = subdirs.pop().unwrap();

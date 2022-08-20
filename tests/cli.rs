@@ -5,7 +5,6 @@ use std::io::Read;
 use std::path::{Path, PathBuf};
 use std::env;
 use std::process::Command;
-use terafirma::SiteBuilder;
 
 
 fn get_crate_exe() -> Option<PathBuf> {
@@ -23,14 +22,14 @@ fn get_crate_exe() -> Option<PathBuf> {
 
 #[test]
 fn test_files_only() -> Result<(), Box<dyn std::error::Error>> {
-    let root = Path::new("tests/files-only");
+    let root = env::current_dir()?.join("tests/files-only");
     // Build site
     assert!(Command::new(get_crate_exe().unwrap())
-            .current_dir(root)
+            .current_dir(&root)
             .status().is_ok());
     // Check static files
-    assert!(&root.join("output/img/emoticon.png").is_file());
-    assert!(&root.join("output/style.css").is_file());
+    assert!(root.join("output/img/emoticon.png").is_file());
+    assert!(root.join("output/style.css").is_file());
     // Check pages
     let mut file = fs::File::open(&root.join("output/home.html"))?;
     let mut contents = String::new();
@@ -93,6 +92,46 @@ fn test_files_only() -> Result<(), Box<dyn std::error::Error>> {
 	</body>
 </html>
 ";
+    assert!(contents == expected);
+
+    Ok(())
+}
+
+
+#[test]
+fn test_toml_only() -> Result<(), Box<dyn std::error::Error>> {
+    let root = env::current_dir()?.join("tests/toml-only");
+    // Build site
+    assert!(Command::new(get_crate_exe().unwrap())
+            .current_dir(&root)
+            .status().is_ok());
+    // Check pages
+    let file_path = root.join("output/index.html");
+    //println!("{:?}", file_path);
+    assert!(file_path.is_file());
+    let mut file = fs::File::open(file_path)?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    let expected = "HOME";
+    assert!(contents == expected);
+
+    let file_path = root.join("output/err/404.html");
+    assert!(file_path.is_file());
+    let mut file = fs::File::open(file_path)?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    let expected = "404 : not found\n";
+    assert!(contents == expected);
+
+    let file_path = root.join("output/github.html");
+    assert!(file_path.is_file());
+    let mut file = fs::File::open(file_path)?;
+    let mut contents = String::new();
+    file.read_to_string(&mut contents)?;
+    let expected = "<!DOCTYPE html><html>
+	<head><meta http-equiv='refresh' content='0; url=\"https://github.com/pennbauman/terafirma\"'/></head>
+	<body><p><a href='https://github.com/pennbauman/terafirma'>https://github.com/pennbauman/terafirma</a></p></body>
+</html>";
     assert!(contents == expected);
 
     Ok(())

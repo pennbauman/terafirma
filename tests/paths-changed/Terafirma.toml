@@ -1,0 +1,9 @@
+[settings]
+output_dir = "target"
+template_dir = "layouts"
+static_dir = "files"
+page_dir = "html"
+
+[[redirect]]
+path = "/github.html"
+url = "https://github.com/pennbauman/terafirma"

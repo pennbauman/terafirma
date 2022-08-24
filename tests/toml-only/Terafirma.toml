@@ -1,10 +1,3 @@
-#[settings]
-#output_dir = "output"
-#template_dir = "templates"
-#static_dir = "static"
-#page_dir = "pages"
-
-
 [[page]]
 path = "/index.html"
 body = "HOME"

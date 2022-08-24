@@ -1,0 +1,16 @@
+[[page]]
+path = "/post-1.html"
+context = { title = "Post #1: The First One" }
+body = """
+{% extends "post.html" %}
+
+{% block content %}
+	Hello world!
+	<br/>
+	meep morp
+{% endblock content %}
+"""
+
+[[page]]
+path = "/post-2.html"
+context = { title = "Post #2: The Second One" }

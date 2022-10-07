@@ -3,9 +3,19 @@ Minimal but powerful static site generator using the Tera template format
 
 
 ## Usage
-Create a `Terafirma.toml` files and run `terafirma` in the directory containing it.
 
-If you would like to use a file name other than `Terafirma.toml`, run `terafirma [path]` where `[path]` is the location of the alternate configuration file.
+	terafirma [OPTIONS] [COMMAND]
+
+### Commands
+ - `build`: Build static site, default command if unspecified
+ - `clean`: Clean up already build site
+ - `new`: Create new configuration file in the current directory
+ - `help`: Print this message or the help of the given subcommand(s)
+
+### Options
+ - `-c`, `--config <FILE>`: Select custom config file, the default is 'Terafirma.toml'
+ - `-h`, `--help`: Print help information
+ - `-V`, `--version`: Print version information
 
 
 ## Terafirma.toml

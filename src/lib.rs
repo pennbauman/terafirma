@@ -22,8 +22,8 @@ pub struct SiteBuilder {
     pages: Vec<PageBuilder>,
 }
 impl SiteBuilder {
-    pub fn from_file(file_path: &str) -> Result<Self> {
-        let path = Path::new(file_path).canonicalize()?;
+    pub fn from_file<P: Into<PathBuf>>(file_path: P) -> Result<Self> {
+        let path = file_path.into().as_path().canonicalize()?;
         let root_dir = path.parent().unwrap();
         // Parse TOML fils
         let mut file = fs::File::open(&path)?;
@@ -113,12 +113,8 @@ impl SiteBuilder {
         let mut tera = Tera::new(&self.template_dir)?;
 
         //println!("build start ...");
-        match fs::remove_dir_all(&self.output_dir) {
-            Ok(_) => (),
-            Err(e) => if e.raw_os_error() != Some(2) {
-                return Err(e.into());
-            },
-        };
+        self.clean()?;
+
         fs::create_dir_all(&self.output_dir)?;
         for f in recursive_ls(&self.static_dir)? {
             //println!("static: {}", f);
@@ -152,6 +148,15 @@ impl SiteBuilder {
         }
 
         Ok(())
+    }
+    pub fn clean(&self) -> Result<()> {
+        match fs::remove_dir_all(&self.output_dir) {
+            Ok(_) => Ok(()),
+            Err(e) => match e.raw_os_error() {
+                Some(2) => Ok(()),
+                _ => Err(e.into()),
+            },
+        }
     }
 }
 

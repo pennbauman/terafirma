@@ -13,4 +13,5 @@ categories = ["command-line-utilities", "template-engine", "web-programming"]
 [dependencies]
 anyhow = "1.0"
 toml = "0.5"
-tera = "1.15"
+tera = "1.17"
+clap = { version = "4.0", features = ["derive"] }

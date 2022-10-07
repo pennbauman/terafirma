@@ -1,7 +1,14 @@
 [package]
 name = "terafirma"
 version = "0.2.0"
+authors = ["Penn Bauman <pennbauman@protonmail.com>"]
 edition = "2021"
+description = "Minimal but powerful static site generator using the Tera template format"
+readme = "README.md"
+repository = "https://github.com/pennbauman/terafirma"
+license = "MIT"
+keywords = ["tera", "static-site"]
+categories = ["command-line-utilities", "template-engine", "web-programming"]
 
 [dependencies]
 anyhow = "1.0"

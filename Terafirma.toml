@@ -20,5 +20,5 @@ body = """
 """
 
 [[redirect]]
-path = "/github"
+path = "/github.html"
 url = "https://github.com/pennbauman/terafirma"
